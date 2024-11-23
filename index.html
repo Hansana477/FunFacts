@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Facts Generator</title>
     <style>
+        body {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -12,37 +19,88 @@
             text-align: center;
         }
 
+        h1 {
+            color: #2c3e50;
+            animation: slideDown 0.8s ease-out;
+        }
+
         #fact-display {
             margin: 20px 0;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #fact-display:hover {
+            transform: translateY(-5px);
         }
 
         #generate-btn {
-            padding: 10px 20px;
-            background-color: #007bff;
+            padding: 12px 24px;
+            background-color: #2c3e50;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
         }
 
         #generate-btn:hover {
-            background-color: #0056b3;
+            background-color: #34495e;
+            transform: scale(1.05);
+        }
+
+        .fade {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(44, 62, 80, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(44, 62, 80, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(44, 62, 80, 0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Random Facts Generator</h1>
-        <div id="fact-display"></div>
+        <div id="fact-display" class="fade">
+            <p class="fact-text"></p>
+        </div>
         <button id="generate-btn">Generate New Fact</button>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const factDisplay = document.getElementById('fact-display');
+            const factText = factDisplay.querySelector('.fact-text');
             const generateBtn = document.getElementById('generate-btn');
             
             const facts = [
@@ -54,15 +112,18 @@
                 "The average person spends 6 months of their lifetime waiting for red lights to turn green."
             ];
 
-            generateBtn.addEventListener('click', generateFact);
-
-            function generateFact() {
+            generateBtn.addEventListener('click', () => {
+                factDisplay.classList.remove('fade');
+                // Trigger reflow
+                void factDisplay.offsetWidth;
+                factDisplay.classList.add('fade');
+                
                 const randomFact = facts[Math.floor(Math.random() * facts.length)];
-                factDisplay.textContent = randomFact;
-            }
+                factText.textContent = randomFact;
+            });
 
             // Generate initial fact
-            generateFact();
+            generateBtn.click();
         });
     </script>
 </body>
